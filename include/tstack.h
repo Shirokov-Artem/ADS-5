@@ -4,39 +4,37 @@
 
 template<typename T, int size>
 class TStack {
-private:
-    T data[size];
-    int topIndex;
-
-public:
-    TStack() : topIndex(-1) {}
-
-    bool isEmpty() const {
-        return topIndex == -1;
+ private:
+  T* data;
+  int count;
+ public:
+  TStack() {
+    data = new T[size];
+    count = 0;
+  }
+  ~TStack() {
+    delete[] data;
+  }
+  void push(T value) {
+    if (count == size) { // проверка на переполнение стека
+      throw std::out_of_range("Stack overflow");
     }
-
-    bool isFull() const {
-        return topIndex == size - 1;
+    data[count++] = value;
+  }
+  T pop() {
+    if (count == 0) { // проверка на пустой стек
+      throw std::out_of_range("Stack is empty");
     }
-
-    void push(const T& value) {
-        if (!isFull()) {
-            topIndex++;
-            data[topIndex] = value;
-        }
+    return data[--count];
+  }
+  T top() const {
+    if (count == 0) { // проверка на пустой стек
+      throw std::out_of_range("Stack is empty");
     }
-
-    void pop() {
-        if (!isEmpty()) {
-            topIndex--;
-        }
-    }
-
-    T top() const {
-        if (!isEmpty()) {
-            return data[topIndex];
-        }
-        return T();
-    }
+    return data[count - 1];
+  }
+  bool isEmpty() const { // проверка на пустоту стека
+    return count == 0;
+  }
 };
 #endif  // INCLUDE_TSTACK_H_
