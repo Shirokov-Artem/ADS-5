@@ -7,20 +7,20 @@
 std::string infx2pstfx(std::string inf) {
   TStack<char, 100> stack;
   std::string result;
-  std::map<char, int> priority = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}}; // таблица приоритетов
+  std::map<char, int> priority = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}};
   for (char c : inf) { // перебираю символы входной строки
-    if (isdigit(c)) { // если символ - цифра, добавляю его в выходную строку
+    if (isdigit(c)) {
       result += c;
-    } else if (c == '(') { // символ - открывающая скобка, помещаю ее в стек
+    } else if (c == '(') {
       stack.push(c);
-    } else if (c == ')') { // символ - закрывающая скобка
-      while (!stack.isEmpty() && stack.top() != '(') { // извлекаю из стека и добавляю в выходную строку, пока не появится открывающая скобка
+    } else if (c == ')') {
+      while (!stack.isEmpty() && stack.top() != '(') {
         result += ' ';
         result += stack.pop();
       }
       stack.pop();
     } else {
-      while (!stack.isEmpty() && stack.top() != '(' && priority[c] <= priority[stack.top()]) { // извлекаю из стека и добавляю в выходную строку, пока не появится меньший приоритет или открывающая скобка
+      while (!stack.isEmpty() && stack.top() != '(' && priority[c] <= priority[stack.top()]) {
         result += ' ';
         result += stack.pop();
       }
