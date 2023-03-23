@@ -20,7 +20,8 @@ std::string infx2pstfx(std::string inf) {
       }
       stack.pop();
     } else {
-      while (!stack.isEmpty() && stack.top() != '(' && priority[c] <= priority[stack.top()]) {
+      while (!stack.isEmpty() && stack.top() != 
+             '(' && priority[c] <= priority[stack.top()]) {
         result += ' ';
         result += stack.pop();
       }
@@ -40,9 +41,9 @@ std::string infx2pstfx(std::string inf) {
 int eval(std::string pref) {
   TStack<int, 100> stack;
   for (char c : pref) { // перебираю символы входной строки
-    if (isdigit(c)) { // если символ - цифра, преобразую его в число и помещаем в стек
+    if (isdigit(c)) {
       stack.push(c - '0');
-    } else if (c == ' ') { // если символ - пробел, пропускаю его
+    } else if (c == ' ') {
       continue;
     } else {
       int op2 = stack.pop();
