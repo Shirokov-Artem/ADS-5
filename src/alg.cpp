@@ -20,7 +20,7 @@ std::string infx2pstfx(std::string inf) {
       }
       stack.pop();
     } else {
-      while (!stack.isEmpty() && stack.top() != 
+      while (!stack.isEmpty() && stack.top() !=
              '(' && priority[c] <= priority[stack.top()]) {
         result += ' ';
         result += stack.pop();
