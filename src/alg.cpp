@@ -5,77 +5,64 @@
 #include "tstack.h"
 
 std::string infx2pstfx(std::string inf) {
-    std::map<char, int> priority = {{'*', 2}, {'/', 2}, {'+', 1}, {'-', 1}, {'(', 0}};
-    std::string result = "";
-    std::stack<char> stack;
-    for (int i = 0; i < inf.size(); i++) {
-        char c = inf[i];
-        if (isdigit(c)) {
-            result += c;
-            // если следующий символ - не цифра, то добавляем пробел
-            if (i + 1 < inf.size() && !isdigit(inf[i + 1])) {
-                result += ' ';
-            }
-        } else if (c == '(') {
-            stack.push(c);
-        } else if (c == ')') {
-            while (stack.top() != '(') {
-                result += ' ';
-                result += stack.top();
-                stack.pop();
-            }
-            stack.pop();
-        } else {
-            while (!stack.empty() && priority[c] <= priority[stack.top()]) {
-                result += ' ';
-                result += stack.top();
-                stack.pop();
-            }
-            result += ' ';
-            stack.push(c);
-        }
-    }
-    while (!stack.empty()) {
+  TStack<char, 100> stack;
+  std::string result;
+  std::map<char, int> priority = {{'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}}; // таблица приоритетов
+  for (char c : inf) { // перебираю символы входной строки
+    if (isdigit(c)) { // если символ - цифра, добавляю его в выходную строку
+      result += c;
+    } else if (c == '(') { // символ - открывающая скобка, помещаю ее в стек
+      stack.push(c);
+    } else if (c == ')') { // символ - закрывающая скобка
+      while (!stack.isEmpty() && stack.top() != '(') { // извлекаю из стека и добавляю в выходную строку, пока не появится открывающая скобка
         result += ' ';
-        result += stack.top();
-        stack.pop();
+        result += stack.pop();
+      }
+      stack.pop();
+    } else {
+      while (!stack.isEmpty() && stack.top() != '(' && priority[c] <= priority[stack.top()]) { // извлекаю из стека и добавляю в выходную строку, пока не появится меньший приоритет или открывающая скобка
+        result += ' ';
+        result += stack.pop();
+      }
+      result += ' ';
+      stack.push(c);
     }
-    return result;
+  }
+
+  while (!stack.isEmpty()) {
+    result += ' ';
+    result += stack.pop();
+  }
+
+  return result;
 }
 
 int eval(std::string pref) {
-    std::stack<int> stack;
-    for (int i = 0; i < pref.size(); i++) {
-        char c = pref[i];
-        if (isdigit(c)) {
-            int num = c - '0';
-            while (i + 1 < pref.size() && isdigit(pref[i + 1])) {
-                num = num * 10 + (pref[i + 1] - '0');
-                i++;
-            }
-            stack.push(num);
-        } else if (c == ' ') {
-            continue;
-        } else {
-            int b = stack.top();
-            stack.pop();
-            int a = stack.top();
-            stack.pop();
-            switch (c) {
-                case '+':
-                    stack.push(a + b);
-                    break;
-                case '-':
-                    stack.push(a - b);
-                    break;
-                case '*':
-                    stack.push(a * b);
-                    break;
-                case '/':
-                    stack.push(a / b);
-                    break;
-            }
-        }
+  TStack<int, 100> stack;
+  for (char c : pref) { // перебираю символы входной строки
+    if (isdigit(c)) { // если символ - цифра, преобразую его в число и помещаем в стек
+      stack.push(c - '0');
+    } else if (c == ' ') { // если символ - пробел, пропускаю его
+      continue;
+    } else {
+      int op2 = stack.pop();
+      int op1 = stack.pop();
+      switch (c) {
+        case '+':
+          stack.push(op1 + op2);
+          break;
+        case '-':
+          stack.push(op1 - op2);
+          break;
+        case '*':
+          stack.push(op1 * op2);
+          break;
+        case '/':
+          stack.push(op1 / op2);
+          break;
+      }
     }
-    return stack.top();
+  }
+
+  return stack.top();
 }
