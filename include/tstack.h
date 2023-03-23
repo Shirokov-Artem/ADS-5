@@ -9,6 +9,7 @@ class TStack {
  private:
   T* data;
   int count;
+  
  public:
   TStack() {
     data = new T[size];
